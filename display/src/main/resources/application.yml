@@ -1,0 +1,38 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: display
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
+      circuitBreaker:
+        requestVolumeThreshold: 1
+        errorThresholdPercentage: 50
+    RemoteProductInfoService#getProductInfo(String):
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000
+      circuitBreaker:
+        requestVolumeThreshold: 1
+        errorThresholdPercentage: 1000
+
+feign:
+  circuitbreaker:
+    enabled: true
