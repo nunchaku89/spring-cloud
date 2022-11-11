@@ -8,16 +8,18 @@ spring:
     gateway:
       routes:
         - id: product
-          uri:
-            http://localhost:8082
+          uri: lb://product
           predicates:
             Path=/products/**
+          filters:
+            - CustomAuthFilter
 
         - id: display
-          uri:
-            http://localhost:8081
+          uri: lb://display
           predicates:
             Path=/displays/**
+          filters:
+            - CustomAuthFilter
 
 eureka:
   instance:
