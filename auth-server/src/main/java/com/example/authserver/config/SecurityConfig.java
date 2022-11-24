@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(new AuthenticationConfiguration()), jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAt(new JwtAuthorizationFilter(authenticationManager(new AuthenticationConfiguration()), userRepository, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthorizationFilter(authenticationManager(new AuthenticationConfiguration()), userRepository, jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
 //                        .antMatchers("/").hasRole("ADMIN")
 //                        .anyRequest().authenticated()
