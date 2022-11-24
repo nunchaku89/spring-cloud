@@ -2,6 +2,9 @@ server:
   port: 8889
 
 spring:
+  devtools:
+    livereload:
+      enabled: true
   application:
     name: auth-server
   thymeleaf:
@@ -9,6 +12,28 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     cache: false
+  datasource:
+    database-type: postgresql
+    url: jdbc:postgresql://192.168.100.72:5432/pidimeta
+    username: pidimeta
+    password: pidimeta
+    driver-class-name: org.postgresql.Driver
+    test-while-idle: true
+    test-on-borrow: true
+    validation-query: SELECT 1
+    mybatis:
+    hikari:
+      maximum-pool-size: 20
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        use_sql_comments: true
+        format_sql: true
+    generate-ddl: true
 
 eureka:
   client:

@@ -1,5 +1,6 @@
 package com.example.authserver.util;
 
+import com.example.authserver.service.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,7 +21,7 @@ public class JwtUtil implements Serializable {
     private String secret = "secret";
 
     //retrieve username from jwt token
-    public String getUsernameFromToken(String token) {
+    public String getUserIdFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
@@ -46,9 +47,9 @@ public class JwtUtil implements Serializable {
     }
 
     //generate token for user
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(CustomUserDetails customUserDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+        return doGenerateToken(claims, customUserDetails.getUser().getUserId());
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
@@ -63,7 +64,7 @@ public class JwtUtil implements Serializable {
 
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
+        final String username = getUserIdFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

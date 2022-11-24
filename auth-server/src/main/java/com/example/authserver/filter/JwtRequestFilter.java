@@ -1,6 +1,6 @@
 package com.example.authserver.filter;
 
-import com.example.authserver.service.UserDetailsServiceImpl;
+import com.example.authserver.service.CustomUserDetailsService;
 import com.example.authserver.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +23,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -34,11 +34,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwtToken = authorizationHeader.substring(7);
-            username = jwtUtil.getUsernameFromToken(jwtToken);
+            username = jwtUtil.getUserIdFromToken(jwtToken);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsServiceImpl.loadUserByUsername(username);
+            UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(username);
             if (jwtUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
